@@ -1,4 +1,4 @@
-import { createCard, getCard, updateCard } from './data-service.js';
+import { createCard, getCard, updateCard, deleteCard } from './data-service.js';
 import { setElementContent, getElement, addClass, removeClass } from './dom-helper.js';
 
 (() => {
@@ -42,10 +42,21 @@ import { setElementContent, getElement, addClass, removeClass } from './dom-help
       }
     }
   });
+  const deleteButton = getElement('.btn-danger');
+
+  deleteButton.addEventListener('click', e => {
+    e.preventDefault();
+    deleteCard(queryParams.cardId)
+      .then(redirectToHomePage)
+      .catch(prepareErrorHandling(false));
+  });
+
+  addClass(deleteButton, 'd-none');
 
   const queryParams = location.search.substring(1).split('&').map(p => p.split('=')).reduce((acc, v) => { acc[v[0]] = v[1]; return acc; }, {});
 
   if (queryParams.cardId) {
+    removeClass(deleteButton, 'd-none');
     getCard(queryParams.cardId).then(card => {
       getElement('#cardId').value = card.id;
       getElement('#cardTitle').value = card.title;
@@ -53,8 +64,6 @@ import { setElementContent, getElement, addClass, removeClass } from './dom-help
       getElement('#cardDescription').value = card.description;
     }).catch(prepareErrorHandling(true));
   }
-  const deleteButton = getElement('.btn-danger');
-  addClass(deleteButton, 'd-none');
 
   setElementContent('#currentYear', new Date().getFullYear());
 })()
