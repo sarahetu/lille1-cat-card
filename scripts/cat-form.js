@@ -5,6 +5,16 @@ import { setElementContent, getElement, addClass, removeClass } from './dom-help
   function redirectToHomePage() {
     location.href = '/';
   }
+  function prepareErrorHandling(hideForm) {
+    return function handleError(error) {
+      const errorContainer = getElement('#formError');
+      removeClass(errorContainer, 'd-none');
+      errorContainer.innerHTML = error;
+      if (hideForm) {
+        addClass(getElement('#cardForm'), 'd-none');
+      }
+    }
+  }
 
   getElement('#cardForm').addEventListener('submit', e => {
     e.preventDefault();
@@ -24,7 +34,9 @@ import { setElementContent, getElement, addClass, removeClass } from './dom-help
       };
       if (queryParams.cardId) {
         card.id = parseInt(getElement('#cardId').value, 10);
-        updateCard(card).then(redirectToHomePage);
+        updateCard(card)
+          .then(redirectToHomePage)
+          .catch(prepareErrorHandling(false));
       } else {
         createCard(card).then(redirectToHomePage);
       }
@@ -39,7 +51,7 @@ import { setElementContent, getElement, addClass, removeClass } from './dom-help
       getElement('#cardTitle').value = card.title;
       getElement('#cardImage').value = card.imageUrl;
       getElement('#cardDescription').value = card.description;
-    });
+    }).catch(prepareErrorHandling(true));
   }
   const deleteButton = getElement('.btn-danger');
   addClass(deleteButton, 'd-none');
