@@ -20,5 +20,10 @@
   "homepage": "https://github.com/sarahetu/lille1-cat-card#readme",
   "devDependencies": {
     "parcel-bundler": "^1.12.4"
+  },
+  "dependencies": {
+    "react": "^16.10.2",
+    "react-dom": "^16.10.2",
+    "react-router-dom": "^5.1.2"
   }
 }
